@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Irsyad - IoT & Developer</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Variabel Warna Neo-Brutalism - Tema Kuning Cerah */
+    :root {
+      --primary: #FF9500;
+      --secondary: #FFD60A;
+      --accent: #FFC107;
+      --background: #FFFDF7;
+      --text: #1A1A1A;
+      --border: #1A1A1A;
+      --highlight: #FF6B35;
+      --purple: #9B5DE5;
+      --orange: #FF8A00;
+      --blue: #FFB800;
+      --card-bg: #FFFFFF;
+      --gradient-1: linear-gradient(135deg, #FF9500 0%, #FFD60A 100%);
+      --gradient-2: linear-gradient(135deg, #FFD60A 0%, #FFB800 100%);
+      --gradient-3: linear-gradient(135deg, #FF8A00 0%, #FFC107 100%);
+      --shadow: 8px 8px 0px var(--border);
+      --shadow-hover: 4px 4px 0px var(--border);
+
+      /* ✅ lebih “ke pinggir” tapi tetap rapi */
+      --container-pad: clamp(8px, 1.2vw, 20px);
+    }
+
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    /* ✅ FIX UTAMA: full width, minim space kosong di kiri-kanan */
+    .container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 var(--container-pad);
+    }
+
+    section {
+      padding: clamp(60px, 6vw, 90px) 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background Pattern */
+    .pattern-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: -1;
+      background-image:
+        radial-gradient(circle at 25% 25%, var(--primary) 2px, transparent 0),
+        radial-gradient(circle at 75% 75%, var(--secondary) 2px, transparent 0);
+      background-size: 50px 50px;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5 {
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+    }
+
+    h2 {
+      font-size: 2.8rem;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    h3 { font-size: 1.8rem; }
+
+    p {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: var(--background);
+      z-index: 1000;
+      border-bottom: 3px solid var(--border);
+      padding: 15px 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+    }
+
+    nav.scrolled {
+      padding: 12px 0;
+      box-shadow: 0 8px 20px rgba(26, 26, 46, 0.1);
+      border-bottom-width: 2px;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border: 3px solid var(--border);
+      padding: 8px 15px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .logo::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-1);
+      transition: left 0.4s ease;
+      z-index: -1;
+    }
+
+    .logo:hover {
+      transform: translate(3px, 3px);
+      box-shadow: var(--shadow-hover);
+      color: white;
+    }
+
+    .logo:hover::before { left: 0; }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      position: relative;
+      padding: 8px 0;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--gradient-1);
+      transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:hover {
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--gradient-2);
+      position: relative;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+
+    /* ✅ dibuat lebih lebar agar ga “ngeblok” di tengah */
+    .hero-content {
+      width: 100%;
+      max-width: 1600px;
+      padding: 0 var(--container-pad);
+      animation: fadeInUp 1s ease-out;
+      z-index: 2;
+      margin: 0 auto;
+    }
+
+    .hero-profile {
+      width: clamp(160px, 14vw, 230px);
+      height: clamp(160px, 14vw, 230px);
+      margin: 0 auto 2.5rem;
+      border: 4px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      animation: profileFloat 6s ease-in-out infinite;
+      background: var(--accent);
+    }
+
+    .hero-profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero h1 {
+      margin-bottom: 1.5rem;
+      text-shadow: 3px 3px 0 rgba(26, 26, 46, 0.2);
+      animation: float 4s ease-in-out infinite, fadeInUp 1s ease-out;
+      color: var(--text);
+      min-height: 1.2em; /* biar typing title ga bikin layout “loncat” */
+    }
+
+    /* ✅ subtitle: min-height biar typing loop ga bikin layout loncat */
+    #heroSubtitle {
+      font-size: 1.3rem;
+      margin-bottom: 2.5rem;
+      color: var(--text);
+      animation: fadeInUp 1s ease-out 0.2s both;
+      min-height: 3.4em; /* kira-kira 2 baris */
+    }
+
+    /* Typing caret effect */
+    .typing-caret {
+      border-right: 3px solid var(--text);
+      padding-right: 4px;
+      animation: caretBlink 0.7s step-end infinite;
+    }
+
+    @keyframes caretBlink {
+      50% { border-color: transparent; }
+    }
+
+    .tagline {
+      display: inline-block;
+      background-color: var(--accent);
+      padding: 10px 20px;
+      border: 3px solid var(--border);
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+      transform: rotate(-1deg);
+      animation: shake 6s ease-in-out infinite, fadeInUp 1s ease-out 0.4s both;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 3px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.4s ease;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .btn:hover::before { left: 100%; }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text);
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* About Section */
+    .about-content {
+      display: grid;
+      gap: clamp(18px, 3vw, 50px);
+      align-items: center;
+
+      /* ✅ supaya ga banyak kosong: teks lebih fleksibel, kolom kanan ikut melebar */
+      grid-template-columns: minmax(360px, 1.25fr) minmax(320px, 1fr);
+    }
+
+    .about-text { animation: slideInLeft 1s ease-out; }
+
+    .about-image {
+      animation: slideInRight 1s ease-out;
+      display: flex;
+      justify-content: center; /* ✅ biar ga “nempel kanan” doang */
+      width: 100%;
+    }
+
+    /* ✅ kartu gambar ikut ngisi kolom */
+    .about-profile {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 1 / 1;
+      border: 4px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 15px;
+      overflow: hidden;
+      background: var(--accent);
+      transition: all 0.4s ease;
+    }
+
+    .about-profile:hover {
+      transform: rotate(1deg) scale(1.03);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .about-profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .about-skills { margin-top: 50px; }
+
+    .skill-category {
+      margin-bottom: 2rem;
+      border: 3px solid var(--border);
+      padding: 20px;
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-category::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--gradient-1);
+      transition: width 0.4s ease;
+    }
+
+    .skill-category:hover {
+      transform: translate(3px, 3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .skill-category:hover::before { width: 100%; opacity: 0.1; }
+
+    .skill-category h3 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+      position: relative;
+      z-index: 1;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .skill-item {
+      background-color: var(--secondary);
+      padding: 6px 12px;
+      border: 2px solid var(--border);
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .skill-item:hover {
+      background-color: var(--accent);
+      transform: scale(1.05) rotate(1deg);
+      color: var(--text);
+    }
+
+    /* ✅ GRID RESPONSIVE BIAR NGISI LAYAR (1-4 kolom) */
+    .projects-grid {
+      display: grid;
+      gap: 25px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 768px) {
+      .projects-grid { grid-template-columns: repeat(2, minmax(280px, 1fr)); }
+    }
+    @media (min-width: 1100px) {
+      .projects-grid { grid-template-columns: repeat(3, minmax(300px, 1fr)); }
+    }
+    @media (min-width: 1500px) {
+      .projects-grid { grid-template-columns: repeat(4, minmax(280px, 1fr)); }
+    }
+
+    .project-card {
+      border: 3px solid var(--border);
+      background-color: var(--card-bg);
+      padding: 0;
+      box-shadow: var(--shadow);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-1);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: 2;
+    }
+
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-image {
+      height: 180px;
+      width: 100%;
+      border-bottom: 3px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .project-card:hover .project-image img { transform: scale(1.05); }
+
+    .project-content { padding: 20px; }
+
+    .project-card:hover {
+      transform: translate(3px, 3px) rotate(0.5deg);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .project-title {
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 12px 0;
+    }
+
+    .tech-tag {
+      background-color: var(--accent);
+      padding: 4px 8px;
+      border: 2px solid var(--border);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .tech-tag:hover {
+      transform: translateY(-2px);
+      background-color: var(--secondary);
+      color: var(--text);
+    }
+
+    .project-links {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .project-links a {
+      font-size: 0.85rem;
+      padding: 8px 16px;
+    }
+
+    /* Technical Details */
+    .tech-details {
+      background-color: var(--card-bg);
+      padding: 30px;
+      border: 3px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: all 0.4s ease;
+    }
+
+    .tech-details:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .detail-item {
+      margin-bottom: 1.8rem;
+      border-left: 3px solid var(--primary);
+      padding-left: 15px;
+      transition: all 0.3s ease;
+      scroll-margin-top: 90px; /* biar klik detail ga ketutup navbar */
+    }
+
+    .detail-item:hover {
+      border-left-width: 6px;
+      padding-left: 12px;
+    }
+
+    .detail-item h3 { color: var(--primary); }
+
+    /* Contact */
+    .contact-content {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1.2fr);
+      gap: 40px;
+      align-items: start;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding: 15px;
+      border: 3px solid var(--border);
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .contact-item:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .contact-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--border);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .contact-sub {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 0;
+      word-break: break-word;
+    }
+
+    /* ✅ ganti form jadi panel “Tujuan & Kolaborasi” */
+    .goal-panel {
+      border: 3px solid var(--border);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      transition: all 0.4s ease;
+    }
+    .goal-panel:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+    }
+    .goal-panel h3 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .goal-panel ul {
+      padding-left: 20px;
+      margin: 14px 0 18px;
+    }
+    .goal-panel li {
+      margin-bottom: 8px;
+    }
+    .goal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--text);
+      color: var(--background);
+      padding: 50px 0 25px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-1);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      background-color: var(--background);
+      color: var(--text);
+      border: 3px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-size: 1.1rem;
+    }
+
+    .social-link:hover {
+      background: var(--gradient-1);
+      transform: translateY(-3px) rotate(3deg);
+      color: white;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes profileFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-8px) rotate(0.5deg); }
+      66% { transform: translateY(-4px) rotate(-0.5deg); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    @keyframes expandWidth { to { transform: scaleX(1); } }
+
+    /* Floating Elements */
+    .floating-element {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: var(--gradient-1);
+      border: 3px solid var(--border);
+      z-index: 1;
+      animation: float 8s ease-in-out infinite;
+      box-shadow: var(--shadow);
+    }
+
+    .floating-element:nth-child(1) {
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+      background: var(--gradient-1);
+    }
+
+    .floating-element:nth-child(2) {
+      top: 20%;
+      right: 10%;
+      background: var(--gradient-2);
+      animation-delay: 1s;
+    }
+
+    .floating-element:nth-child(3) {
+      bottom: 15%;
+      left: 15%;
+      background: var(--gradient-3);
+      animation-delay: 2s;
+    }
+
+    .floating-element:nth-child(4) {
+      bottom: 25%;
+      right: 5%;
+      background: var(--accent);
+      animation-delay: 3s;
+    }
+
+    .floating-element:nth-child(5) {
+      top: 40%;
+      left: 10%;
+      background: var(--purple);
+      animation-delay: 4s;
+    }
+
+    .floating-element:nth-child(6) {
+      top: 60%;
+      right: 15%;
+      background: var(--orange);
+      animation-delay: 5s;
+    }
+
+    /* Section Headers */
+    .section-header {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 3rem;
+    }
+
+    .section-header::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: var(--gradient-1);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+      animation: expandWidth 1s ease-out 0.5s forwards;
+    }
+
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: var(--gradient-1);
+      z-index: 1001;
+      transition: width 0.3s ease;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 45px;
+      height: 45px;
+      background: var(--gradient-1);
+      color: white;
+      border: 3px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      z-index: 999;
+      box-shadow: var(--shadow);
+    }
+
+    .back-to-top.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Enhanced Scroll Animations */
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .scroll-animate.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-animate-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .scroll-animate-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .scroll-animate-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .scroll-animate-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .scroll-animate-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .scroll-animate-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .about-content, .contact-content {
+        grid-template-columns: 1fr;
+      }
+
+      h1 { font-size: 2.8rem; }
+      h2 { font-size: 2.2rem; }
+
+      #heroSubtitle { min-height: 4.2em; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .mobile-menu-btn { display: block; }
+
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.8rem; }
+
+      .floating-element { width: 70px; height: 70px; }
+
+      section { padding: 60px 0; }
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 3px solid var(--border);
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      height: 100vh;
+      background-color: var(--background);
+      z-index: 1001;
+      border-left: 3px solid var(--border);
+      transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 80px 25px 25px;
+      box-shadow: -8px 0 20px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.active { right: 0; }
+
+    .mobile-menu-links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .mobile-menu-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 12px 0;
+      border-bottom: 2px solid var(--border);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .mobile-menu-links a:hover {
+      color: var(--primary);
+      padding-left: 8px;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: 3px solid var(--border);
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.3rem;
+      background-color: var(--card-bg);
+      transition: all 0.3s ease;
+    }
+
+    .close-menu:hover {
+      background-color: var(--primary);
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    /* Cursor Effect */
+    .cursor {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      pointer-events: none;
+      mix-blend-mode: difference;
+      z-index: 9999;
+      transition: transform 0.2s ease;
+    }
+
+    .cursor-follower {
+      position: fixed;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.4s ease;
+    }
+
+    @media (hover: none) {
+      .cursor, .cursor-follower { display: none; }
+    }
+
+    /* List styling (Data Diri) */
+    ul { padding-left: 20px; margin-bottom: 1.5rem; }
+    li { margin-bottom: 8px; }
+  </style>
+</head>
+
+<body>
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress"></div>
+
+  <!-- Back to Top Button -->
+  <div class="back-to-top">↑</div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">Irsyad</a>
+      <div class="nav-links">
+        <a href="#about">Tentang</a>
+        <a href="#projects">Proyek</a>
+        <a href="#technical">Detail Teknis</a>
+        <a href="#contact">Kontak</a>
+      </div>
+      <button class="mobile-menu-btn">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">✕</button>
+    <div class="mobile-menu-links">
+      <a href="#about">Tentang</a>
+      <a href="#projects">Proyek</a>
+      <a href="#technical">Detail Teknis</a>
+      <a href="#contact">Kontak</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="pattern-bg"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    <div class="hero-content">
+      <div class="hero-profile">
+        <!-- ✅ Pakai gambar lokal + fallback -->
+        <img
+          src="profile.png"
+          alt="Irsyad - IoT Developer"
+          onerror="tryLocalFallback(this,'public/profile.png','Irsyad')"
+        >
+      </div>
+
+      <h1 id="heroTitle">Irsyad</h1>
+
+      <div class="tagline">IoT • Backend • Cloud • Realtime Systems</div>
+
+      <p id="heroSubtitle">
+        Mahasiswa & praktisi di bidang IoT, kelistrikan, robotik, dan pengembangan aplikasi (Android & web) untuk sistem yang benar-benar kepakai.
+      </p>
+
+      <a href="#projects" class="btn">Lihat Proyek Saya</a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <div class="pattern-bg"></div>
+      <h2 class="section-header">Tentang Saya</h2>
+
+      <div class="about-content">
+        <div class="about-text scroll-animate-left">
+          <p>
+            Saya adalah mahasiswa dan praktisi pemula di bidang IoT, kelistrikan, robotik, dan pengembangan aplikasi (Android & web).
+            Terbiasa bekerja dengan mikrokontroler, aktuator servo, sensor listrik & lingkungan, serta membangun dashboard dan aplikasi
+            mobile/web untuk pemantauan & kontrol realtime.
+          </p>
+
+          <p>
+            Fokus saya adalah solusi yang benar-benar terpakai: dari absensi RFID + sidik jari di sekolah (EduSmart),
+            monitoring & kontrol daya listrik (PZEM + relay), robot diferensial hindari rintangan,
+            hingga server Ubuntu dengan HAProxy + Keepalived + MySQL untuk high-availability.
+          </p>
+
+          <h3>Data Diri</h3>
+          <ul>
+            <li><strong>Nama:</strong> Irsyad</li>
+            <li><strong>Domisili:</strong> Cikarang, Jawa Barat</li>
+            <li><strong>Email:</strong> franklnlynirsyad@gmail.com</li>
+            <li><strong>No. HP / WhatsApp:</strong> 089531832365</li>
+            <li><strong>GitHub:</strong> https://github.com/Franklnir</li>
+            <li><strong>Instagram:</strong> @ir_syad2612</li>
+          </ul>
+        </div>
+
+        <div class="about-image">
+          <div class="about-profile scroll-animate-right">
+            <!-- ✅ Pakai gambar lokal + fallback -->
+            <img
+              src="image.png"
+              alt="Irsyad Bekerja"
+              onerror="tryLocalFallback(this,'public/image.png','Irsyad Bekerja')"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="about-skills">
+        <div class="skill-category scroll-animate">
+          <h3>IoT & Mikrokontroler</h3>
+          <div class="skill-list">
+            <span class="skill-item">ESP8266</span>
+            <span class="skill-item">ESP32</span>
+            <span class="skill-item">ESP32-CAM</span>
+            <span class="skill-item">RFID PN532</span>
+            <span class="skill-item">Fingerprint HLK</span>
+            <span class="skill-item">PZEM-004T</span>
+            <span class="skill-item">DHT22</span>
+            <span class="skill-item">BME280</span>
+            <span class="skill-item">MQ135</span>
+            <span class="skill-item">HC-SR04</span>
+            <span class="skill-item">Relay</span>
+            <span class="skill-item">Servo</span>
+            <span class="skill-item">HTTP/REST</span>
+            <span class="skill-item">MQTT</span>
+            <span class="skill-item">WebSocket</span>
+          </div>
+        </div>
+
+        <div class="skill-category scroll-animate">
+          <h3>Pemrograman & Backend</h3>
+          <div class="skill-list">
+            <span class="skill-item">C/C++ (Arduino)</span>
+            <span class="skill-item">Python (Flask/FastAPI)</span>
+            <span class="skill-item">PHP (Laravel/CodeIgniter 4)</span>
+            <span class="skill-item">SQL (MySQL/PostgreSQL)</span>
+            <span class="skill-item">JWT/Auth</span>
+          </div>
+        </div>
+
+        <div class="skill-category scroll-animate">
+          <h3>Mobile & Web</h3>
+          <div class="skill-list">
+            <span class="skill-item">Android (Java)</span>
+            <span class="skill-item">HTML</span>
+            <span class="skill-item">CSS</span>
+            <span class="skill-item">JavaScript</span>
+            <span class="skill-item">React</span>
+            <span class="skill-item">Vite</span>
+            <span class="skill-item">Tailwind</span>
+            <span class="skill-item">Chart.js</span>
+          </div>
+        </div>
+
+        <div class="skill-category scroll-animate">
+          <h3>Cloud, DevOps & Server</h3>
+          <div class="skill-list">
+            <span class="skill-item">Firebase</span>
+            <span class="skill-item">Supabase</span>
+            <span class="skill-item">Ubuntu Server</span>
+            <span class="skill-item">HAProxy</span>
+            <span class="skill-item">Keepalived</span>
+            <span class="skill-item">Nginx/Apache</span>
+            <span class="skill-item">UFW</span>
+            <span class="skill-item">SSL/TLS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="container">
+      <div class="pattern-bg"></div>
+      <h2 class="section-header">Proyek Utama</h2>
+
+      <div class="projects-grid">
+
+        <!-- 1) EduSmart -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <img
+              src="assets/projects/edusmart.jpg"
+              alt="EduSmart - Sistem Absensi Realtime"
+              onerror="tryLocalFallback(this,'public/assets/projects/edusmart.jpg','EduSmart')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">EduSmart - Sistem Absensi Realtime</h3>
+            <p>
+              Absensi RFID PN532 + Fingerprint HLK dengan <strong>4 role</strong> (Super Admin / Admin / Guru / Siswa).
+              Mendukung <strong>multi sekolah</strong> berbasis <strong>subdomain</strong>, update realtime ke dashboard, dan manajemen data terpusat.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">Vite</span>
+              <span class="tech-tag">Laravel 12</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">PN532</span>
+              <span class="tech-tag">HLK-ZW101</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Franklnir/EduSmart-sistem-absensi.git" class="btn">GitHub</a>
+              <a href="#detail-edusmart" class="btn btn-secondary">Detail Teknis</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2) Dashboard Monitoring & Pengolahan IoT -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <img
+              src="assets/projects/power-monitoring.jpg"
+              alt="Dashboard Monitoring & Pengolahan IoT"
+              onerror="tryLocalFallback(this,'public/assets/projects/power-monitoring.jpg','Dashboard IoT')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Dashboard Monitoring & Pengolahan IoT</h3>
+            <p>
+              Monitoring sensor lingkungan & listrik (suhu, kelembapan, daya) dengan alur: <strong>ESP32 → API → Database → WebSocket → Chart.js</strong>.
+              Fokus ke data realtime yang mudah dibaca, kontrol operasional, dan ekspor data.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Flask</span>
+              <span class="tech-tag">FastAPI</span>
+              <span class="tech-tag">MySQL</span>
+              <span class="tech-tag">WebSocket</span>
+              <span class="tech-tag">Chart.js</span>
+              <span class="tech-tag">ESP32</span>
+            </div>
+            <div class="project-links">
+              <a href="#detail-dashboard-iot" class="btn">Lihat Detail</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3) Server High-Availability -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <img
+              src="assets/projects/ha-server.jpg"
+              alt="Server High-Availability"
+              onerror="tryLocalFallback(this,'public/assets/projects/ha-server.jpg','Server HA')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Server High-Availability (HA)</h3>
+            <p>
+              Infrastruktur <strong>2 node Ubuntu</strong> dengan <strong>Keepalived (VRRP)</strong> untuk failover otomatis dan
+              <strong>HAProxy</strong> sebagai reverse proxy/load balancer. Cocok untuk web/API yang butuh uptime tinggi.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Ubuntu</span>
+              <span class="tech-tag">HAProxy</span>
+              <span class="tech-tag">Keepalived</span>
+              <span class="tech-tag">TLS</span>
+              <span class="tech-tag">UFW</span>
+              <span class="tech-tag">MySQL</span>
+            </div>
+            <div class="project-links">
+              <a href="#detail-ha" class="btn">Lihat Detail</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4) IoT Power Control -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <img
+              src="assets/projects/power-monitoring.jpg"
+              alt="Kontrol Daya IoT - PZEM + Relay"
+              onerror="tryLocalFallback(this,'public/assets/projects/power-monitoring.jpg','Kontrol Daya IoT')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Kontrol Daya IoT (PZEM + Relay)</h3>
+            <p>
+              Baca tegangan/arus/daya/kWh via PZEM-004T (ESP8266/ESP32). Kontrol relay multi-channel (manual & timer) dengan monitoring realtime di dashboard.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">ESP8266</span>
+              <span class="tech-tag">ESP32</span>
+              <span class="tech-tag">PZEM-004T</span>
+              <span class="tech-tag">Relay</span>
+              <span class="tech-tag">Arduino</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Franklnir/sensor-pzem-004t-v4.git" class="btn">GitHub</a>
+              <a href="#detail-pzem" class="btn btn-secondary">Detail Teknis</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5) AI / Xiaozhi (Backend) -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <img
+              src="assets/projects/xiaozhi-ai.jpg"
+              alt="Integrasi AI / Xiaozhi (Backend)"
+              onerror="tryLocalFallback(this,'public/assets/projects/xiaozhi-ai.jpg','Integrasi AI')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Integrasi AI / Xiaozhi (Backend)</h3>
+            <p>
+              Integrasi AI ke sistem: manajemen mode, token, endpoint, dan kontrol berbasis backend agar mudah di-scale dan di-maintain.
+              Ditambah <strong>asisten yang bisa diperintah dengan suara</strong> (voice command) untuk memicu aksi:
+              jalankan mode, explain perintah, query data, dan kontrol perangkat sesuai kebutuhan.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">FastAPI</span>
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">JWT/Auth</span>
+              <span class="tech-tag">WebSocket</span>
+              <span class="tech-tag">MySQL</span>
+              <span class="tech-tag">Voice Command</span>
+            </div>
+            <div class="project-links">
+              <a href="#detail-ai" class="btn">Lihat Detail</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6) CCTV Tracking (ESP32-CAM + MediaPipe) -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <!-- kalau belum punya file, nanti otomatis jadi placeholder gradient -->
+            <img
+              src="assets/projects/cctv.jpg"
+              alt="CCTV Tracking (ESP32-CAM + MediaPipe)"
+              onerror="tryLocalFallback(this,'public/assets/projects/cctv.jpg','CCTV Tracking')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">CCTV Tracking (ESP32-CAM + MediaPipe)</h3>
+            <p><strong>Peran:</strong> Vision & Backend Integrasi</p>
+            <p>
+              ESP32-CAM streaming (gaya CCTV) → Python (MediaPipe) untuk deteksi & tracking wajah/kepala/objek.
+              Hasil tracking bisa ditampilkan di UI dan dipakai untuk otomasi (trigger event/alert), atau pan-tilt jika memakai bracket.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">ESP32-CAM</span>
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">MediaPipe</span>
+              <span class="tech-tag">Flask</span>
+              <span class="tech-tag">MQTT (Opsional)</span>
+            </div>
+            <div class="project-links">
+              <a href="#detail-cctv" class="btn">Lihat Detail</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7) Robot Obstacle Avoidance -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <img
+              src="assets/projects/wheel-robot.jpg"
+              alt="Robot Diferensial 2 Roda - Hindari Rintangan"
+              onerror="tryLocalFallback(this,'public/assets/projects/wheel-robot.jpg','Robot')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Robot Diferensial 2 Roda (Hindari Rintangan)</h3>
+            <p><strong>Peran:</strong> Embedded Developer</p>
+            <p>
+              Robot 2 roda dengan HC-SR04 untuk deteksi jarak. Logika threshold jarak (maju/belok),
+              smoothing pembacaan, dan manajemen daya sederhana agar stabil.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">ESP32</span>
+              <span class="tech-tag">Arduino</span>
+              <span class="tech-tag">HC-SR04</span>
+              <span class="tech-tag">Motor DC</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Franklnir/code-robotic-servo-with-esp32-c3.git" class="btn">GitHub</a>
+              <a href="#detail-robot" class="btn btn-secondary">Detail Teknis</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8) Recipe App (Mobile & Web) -->
+        <div class="project-card scroll-animate-scale">
+          <div class="project-image">
+            <!-- kalau belum punya file, nanti otomatis jadi placeholder gradient -->
+            <img
+              src="assets/projects/recipe-app.jpg"
+              alt="Aplikasi Resep Makanan (Android + Web)"
+              onerror="tryLocalFallback(this,'public/assets/projects/recipe-app.jpg','Recipe App')"
+            >
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Aplikasi Resep Makanan (Android + Web)</h3>
+            <p><strong>Peran:</strong> Mobile & Web Developer</p>
+            <p>
+              Platform resep makanan untuk pengalaman <strong>mobile (Android)</strong> dan kebutuhan <strong>web</strong>.
+              Mobile: Firebase Auth + database, UI list & search (RecyclerView + Glide).
+              Web: <strong>CodeIgniter 4 (PHP)</strong> untuk kebutuhan admin/data & integrasi API.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Android (Java)</span>
+              <span class="tech-tag">Firebase</span>
+              <span class="tech-tag">CodeIgniter 4</span>
+              <span class="tech-tag">PHP</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Franklnir/android-studio-resep-makanan.git" class="btn">GitHub</a>
+              <a href="#detail-resep" class="btn btn-secondary">Detail Teknis</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Details -->
+  <section id="technical">
+    <div class="container">
+      <div class="pattern-bg"></div>
+      <h2 class="section-header">Detail Teknis</h2>
+
+      <div class="tech-details scroll-animate">
+
+        <div class="detail-item" id="detail-edusmart">
+          <h3>EduSmart (Absensi RFID + Fingerprint, Multi Sekolah)</h3>
+          <p><strong>Perangkat:</strong> PN532 (I2C/SPI), HLK-ZW101 (UART) ke ESP32/ESP8266.</p>
+          <p><strong>Role:</strong> <strong>Super Admin / Admin / Guru / Siswa</strong> dengan kontrol akses sesuai kebutuhan.</p>
+          <p><strong>Multi sekolah:</strong> Arsitektur <strong>multi-tenant</strong> berbasis <strong>subdomain</strong> (tiap sekolah terpisah namun tetap terkelola).</p>
+          <p><strong>Stack:</strong> Frontend <strong>React + Vite</strong>, Backend <strong>Laravel 12</strong>, Database <strong>PostgreSQL</strong>.</p>
+          <p><strong>Alur:</strong> Tap kartu / scan sidik jari → verifikasi → tulis ke database (kelas/tanggal/jam) → UI update realtime ke dashboard.</p>
+        </div>
+
+        <div class="detail-item" id="detail-dashboard-iot">
+          <h3>Dashboard Monitoring & Pengolahan IoT</h3>
+          <p><strong>Flow:</strong> Sensor → REST API (Flask/FastAPI) → Database (MySQL) → WebSocket → Chart.js realtime.</p>
+          <p><strong>Fitur:</strong> grafik realtime, histori, filter waktu, ekspor CSV/Excel, dan opsi integrasi kontrol (relay/parameter ambang).</p>
+          <p><strong>Tujuan:</strong> data mudah dibaca untuk operasional, deteksi anomali lebih cepat, dan siap dipakai di lapangan.</p>
+        </div>
+
+        <div class="detail-item" id="detail-ha">
+          <h3>Server High-Availability (HAProxy + Keepalived)</h3>
+          <p><strong>Topologi:</strong> Client → Virtual IP (VIP) → HAProxy → Backend (Web/API).</p>
+          <p><strong>Failover:</strong> VRRP (MASTER/BACKUP), VIP pindah otomatis saat node down.</p>
+          <p><strong>Health-check:</strong> tcp-check/http-check untuk memastikan backend sehat.</p>
+          <p><strong>Keamanan:</strong> UFW, hardening header, dan TLS (Let's Encrypt) untuk production.</p>
+        </div>
+
+        <div class="detail-item" id="detail-pzem">
+          <h3>Kontrol Daya IoT (PZEM + Relay)</h3>
+          <p><strong>Pengukuran:</strong> tegangan/arus/daya/kWh via PZEM-004T, interval sampling disesuaikan kebutuhan.</p>
+          <p><strong>Kontrol:</strong> manual toggle + timer ON/OFF; bisa ditambah notifikasi jika melewati ambang.</p>
+          <p><strong>Fokus:</strong> keamanan & efisiensi energi (mengurangi pemborosan & risiko kerusakan).</p>
+        </div>
+
+        <div class="detail-item" id="detail-ai">
+          <h3>Integrasi AI / Xiaozhi (Backend) + Asisten Suara</h3>
+          <p><strong>Fokus:</strong> mode AI, token, endpoint, kontrol akses, dan arsitektur backend agar integrasi mudah di-scale.</p>
+          <p><strong>Asisten suara:</strong> voice command untuk memicu aksi sistem, misalnya:</p>
+          <ul>
+            <li>Jalankan mode tertentu (monitoring/otomasi).</li>
+            <li>Eksekusi perintah aman berbasis role (misal admin saja).</li>
+            <li>Query ringkasan data realtime (misal “berapa suhu sekarang?”).</li>
+            <li>Kontrol perangkat (misal relay/parameter ambang) lewat backend.</li>
+          </ul>
+          <p><strong>Tujuan:</strong> AI jadi komponen sistem yang benar-benar kepakai, bukan sekadar fitur tempelan.</p>
+        </div>
+
+        <div class="detail-item" id="detail-cctv">
+          <h3>CCTV Tracking (ESP32-CAM + MediaPipe)</h3>
+          <p><strong>Flow:</strong> ESP32-CAM streaming (CCTV-style) → Python (MediaPipe) → tracking wajah/kepala/objek.</p>
+          <p><strong>Output:</strong> hasil tracking tampil di UI, bisa dijadikan event/alert, atau pan-tilt jika bracket tersedia.</p>
+          <p><strong>Kontrol:</strong> smoothing agar tidak “getar”, tuning threshold & update rate agar responsif.</p>
+          <p><strong>Integrasi:</strong> MQTT opsional untuk publish event ke perangkat lain.</p>
+        </div>
+
+        <div class="detail-item" id="detail-robot">
+          <h3>Robot Diferensial 2 Roda (Hindari Rintangan)</h3>
+          <p><strong>Sensor:</strong> HC-SR04 untuk estimasi jarak rintangan.</p>
+          <p><strong>Logic:</strong> threshold jarak → maju/belok; smoothing pembacaan untuk mengurangi noise.</p>
+          <p><strong>Control:</strong> motor driver + manajemen daya sederhana.</p>
+        </div>
+
+        <div class="detail-item" id="detail-resep">
+          <h3>Aplikasi Resep Makanan (Android + Web)</h3>
+          <p><strong>Mobile:</strong> Android (Java) UI list, kategori, search (RecyclerView + Glide), Auth dengan Firebase.</p>
+          <p><strong>Web:</strong> <strong>CodeIgniter 4 (PHP)</strong> untuk manajemen data/admin dan integrasi API bila diperlukan.</p>
+          <p><strong>Tujuan:</strong> pengalaman multi-platform agar sistem bisa berkembang (mobile + web) sesuai kebutuhan.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <div class="pattern-bg"></div>
+      <h2 class="section-header">Kontak & Tautan</h2>
+
+      <div class="contact-content">
+
+        <div class="contact-info">
+          <!-- ✅ bisa diklik langsung (arahkan) -->
+          <a class="contact-item scroll-animate-left" href="mailto:franklnlynirsyad@gmail.com?subject=Kolaborasi%20%7C%20Irsyad&body=Halo%20Irsyad%2C%0A%0ASaya%20ingin%20diskusi%20tentang%20...%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <h3>Email</h3>
+              <p class="contact-sub">franklnlynirsyad@gmail.com</p>
+            </div>
+          </a>
+
+          <a class="contact-item scroll-animate-left" href="https://wa.me/6289531832365" target="_blank" rel="noopener">
+            <div class="contact-icon">📱</div>
+            <div>
+              <h3>WhatsApp</h3>
+              <p class="contact-sub">089531832365</p>
+            </div>
+          </a>
+
+          <a class="contact-item scroll-animate-left" href="https://github.com/Franklnir" target="_blank" rel="noopener">
+            <div class="contact-icon">🔗</div>
+            <div>
+              <h3>GitHub</h3>
+              <p class="contact-sub">https://github.com/Franklnir</p>
+            </div>
+          </a>
+
+          <a class="contact-item scroll-animate-left" href="https://www.instagram.com/ir_syad2612?igsh=MTFuamNieGUwZXpwbw==" target="_blank" rel="noopener">
+            <div class="contact-icon">📸</div>
+            <div>
+              <h3>Instagram</h3>
+              <p class="contact-sub">@ir_syad2612</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- ✅ ganti “Kirim Pesan” jadi panel tujuan + CTA -->
+        <div class="goal-panel scroll-animate-right">
+          <h3>Tujuan & Kolaborasi</h3>
+          <p>
+            Saya siap menghadirkan solusi teknologi yang adaptif untuk mendukung <strong>skalabilitas</strong> dan
+            <strong>kelancaran operasional</strong> perusahaan/industri/instansi ke tingkat yang lebih produktif.
+          </p>
+
+          <ul>
+            <li>Meningkatkan efisiensi kerja lewat monitoring realtime dan otomasi.</li>
+            <li>Mempercepat adopsi teknologi baru tanpa bikin sistem “ribet” di lapangan.</li>
+            <li>Membangun arsitektur yang rapi, aman, dan mudah di-maintain.</li>
+            <li>Mengintegrasikan IoT, backend, dan AI agar benar-benar kepakai.</li>
+          </ul>
+
+          <div class="goal-actions">
+            <a class="btn" href="mailto:franklnlynirsyad@gmail.com?subject=Kolaborasi%20%7C%20Irsyad&body=Halo%20Irsyad%2C%0A%0ASaya%20ingin%20diskusi%20tentang%20...%0A%0ATerima%20kasih." target="_blank" rel="noopener">Email Saya</a>
+            <a class="btn btn-secondary" href="https://wa.me/6289531832365" target="_blank" rel="noopener">Chat WhatsApp</a>
+            <a class="btn btn-accent" href="#projects">Lihat Proyek</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Irsyad. All rights reserved.</p>
+      <div class="social-links">
+        <a href="https://github.com/Franklnir" class="social-link" target="_blank" rel="noopener">GH</a>
+        <a href="https://www.instagram.com/ir_syad2612?igsh=MTFuamNieGUwZXpwbw==" class="social-link" target="_blank" rel="noopener">IG</a>
+        <a href="https://wa.me/6289531832365" class="social-link" target="_blank" rel="noopener">WA</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ============================
+    // ✅ Image fallback helper
+    // ============================
+    function imgFallback(img, label) {
+      const safe = (label || 'Image').replace(/[<>]/g, '');
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#FF9500"/>
+              <stop offset="1" stop-color="#FFD60A"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#g)"/>
+          <rect x="20" y="20" width="1160" height="635" rx="22" ry="22" fill="rgba(255,255,255,0.20)" stroke="#1A1A1A" stroke-width="6"/>
+          <text x="50%" y="50%" font-family="Montserrat, Arial" font-size="54" font-weight="900" fill="#1A1A1A" dominant-baseline="middle" text-anchor="middle">${safe}</text>
+          <text x="50%" y="58%" font-family="Montserrat, Arial" font-size="22" font-weight="700" fill="#1A1A1A" opacity="0.8" dominant-baseline="middle" text-anchor="middle">gambar belum tersedia</text>
+        </svg>`;
+      img.onerror = null;
+      img.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    function tryLocalFallback(img, fallbackSrc, label) {
+      if (!img) return;
+      if (!img.dataset.tried) {
+        img.dataset.tried = "1";
+        img.src = fallbackSrc;
+        return;
+      }
+      imgFallback(img, label);
+    }
+
+    // Custom Cursor
+    const cursor = document.querySelector('.cursor');
+    const cursorFollower = document.querySelector('.cursor-follower');
+
+    document.addEventListener('mousemove', (e) => {
+      if (!cursor || !cursorFollower) return;
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+
+      setTimeout(() => {
+        cursorFollower.style.left = e.clientX + 'px';
+        cursorFollower.style.top = e.clientY + 'px';
+      }, 100);
+    });
+
+    // Hover effects for cursor
+    const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-item, .tech-tag');
+
+    hoverElements.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        if (!cursor || !cursorFollower) return;
+        cursor.style.transform = 'scale(1.3)';
+        cursorFollower.style.transform = 'scale(1.3)';
+      });
+
+      el.addEventListener('mouseleave', () => {
+        if (!cursor || !cursorFollower) return;
+        cursor.style.transform = 'scale(1)';
+        cursorFollower.style.transform = 'scale(1)';
+      });
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (!navbar) return;
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+
+    // Scroll progress bar
+    window.addEventListener('scroll', function() {
+      const scrollProgress = document.querySelector('.scroll-progress');
+      if (!scrollProgress) return;
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (window.scrollY / windowHeight) * 100;
+      scrollProgress.style.width = scrolled + '%';
+    });
+
+    // Back to top button
+    const backToTop = document.querySelector('.back-to-top');
+
+    window.addEventListener('scroll', function() {
+      if (!backToTop) return;
+      if (window.scrollY > 500) backToTop.classList.add('active');
+      else backToTop.classList.remove('active');
+    });
+
+    backToTop?.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Mobile menu
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const closeMenuBtn = document.getElementById('closeMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    mobileMenuBtn?.addEventListener('click', function() {
+      mobileMenu?.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeMenuBtn?.addEventListener('click', function() {
+      mobileMenu?.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (!targetId || targetId === '#') return;
+
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          window.scrollTo({
+            top: targetElement.offsetTop - 70,
+            behavior: 'smooth'
+          });
+
+          mobileMenu?.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        }
+      });
+    });
+
+    // Scroll Animations
+    const scrollElements = document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right, .scroll-animate-scale');
+
+    const elementInView = (el, dividend = 1) => {
+      const elementTop = el.getBoundingClientRect().top;
+      return (elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend);
+    };
+
+    const handleScrollAnimation = () => {
+      scrollElements.forEach((el) => {
+        if (elementInView(el, 1.2)) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+    };
+
+    window.addEventListener('scroll', handleScrollAnimation);
+    handleScrollAnimation();
+
+    // Button pulse
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mouseenter', function() {
+        this.style.animation = 'pulse 0.5s ease-in-out';
+      });
+
+      btn.addEventListener('animationend', function() {
+        this.style.animation = '';
+      });
+    });
+
+    // ✅ Typing loop (title + subtitle), pause 8 detik, ulang (typing-nya loop ya ✅)
+    const heroTitle = document.getElementById('heroTitle');
+    const heroSubtitle = document.getElementById('heroSubtitle');
+
+    const titleText = heroTitle ? heroTitle.textContent.trim() : '';
+    const subtitleText = heroSubtitle ? heroSubtitle.textContent.trim() : '';
+
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+
+    async function typeText(el, text, speed) {
+      if (!el) return;
+      el.textContent = '';
+      el.classList.add('typing-caret');
+      for (let i = 0; i < text.length; i++) {
+        el.textContent += text.charAt(i);
+        await sleep(speed);
+      }
+      el.classList.remove('typing-caret');
+    }
+
+    async function typingLoop() {
+      if (heroTitle) heroTitle.textContent = '';
+      if (heroSubtitle) heroSubtitle.textContent = '';
+
+      while (true) {
+        await sleep(350);
+        await typeText(heroTitle, titleText, 90);
+        await sleep(220);
+        await typeText(heroSubtitle, subtitleText, 22);
+
+        // tunggu 8 detik lalu ulang
+        await sleep(8000);
+      }
+    }
+
+    window.addEventListener('load', typingLoop);
+  </script>
+</body>
+</html>
