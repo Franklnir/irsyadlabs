@@ -221,7 +221,8 @@
       max-width: 1600px;
       padding: 0 var(--container-pad);
       animation: fadeInUp 1s ease-out;
-      z-index: 2;
+      z-index: 5;              /* ✅ teks di atas kotak */
+      position: relative;      /* ✅ penting: biar z-index kepakai */
       margin: 0 auto;
     }
 
@@ -545,6 +546,55 @@
       padding: 8px 16px;
     }
 
+    /* ✅ Tambahan: panel Fungsi Utama biar proyek “keliatan kerjaannya” */
+    details.project-more {
+      margin-top: 12px;
+      border: 2px dashed var(--border);
+      background: rgba(255, 214, 10, 0.22);
+      padding: 12px 14px;
+      box-shadow: 4px 4px 0px var(--border);
+      transition: all 0.25s ease;
+    }
+    details.project-more:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--border);
+    }
+    details.project-more summary {
+      cursor: pointer;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      list-style: none;
+      outline: none;
+    }
+    details.project-more summary::-webkit-details-marker { display: none; }
+    details.project-more summary::before {
+      content: "▸";
+      display: inline-block;
+      margin-right: 10px;
+      transform: translateY(-1px);
+      transition: transform 0.2s ease;
+    }
+    details.project-more[open] summary::before {
+      transform: rotate(90deg) translateX(2px);
+    }
+    details.project-more[open] summary { margin-bottom: 10px; }
+    details.project-more ul {
+      margin: 0;
+      padding-left: 18px;
+      list-style: disc;
+    }
+    details.project-more li {
+      margin-bottom: 7px;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+    details.project-more li::marker {
+      color: var(--primary);
+      font-weight: 900;
+    }
+
     /* Technical Details */
     .tech-details {
       background-color: var(--card-bg);
@@ -739,56 +789,62 @@
 
     @keyframes expandWidth { to { transform: scaleX(1); } }
 
-    /* Floating Elements */
+    /* ================================
+       ✅ FIX FLOATING ELEMENTS (ANTI NUTUP TEKS)
+       ================================ */
     .floating-element {
       position: absolute;
-      width: 100px;
-      height: 100px;
+      width: clamp(54px, 7vw, 100px);
+      height: clamp(54px, 7vw, 100px);
       background: var(--gradient-1);
       border: 3px solid var(--border);
-      z-index: 1;
+      z-index: 1;               /* ✅ di bawah hero-content (z-index:5) */
+      pointer-events: none;     /* ✅ tidak ganggu klik */
       animation: float 8s ease-in-out infinite;
       box-shadow: var(--shadow);
+      opacity: 0.95;
     }
 
-    .floating-element:nth-child(1) {
-      top: 10%;
-      left: 5%;
+    /* ✅ Karena .pattern-bg adalah child pertama,
+       floating-element mulai dari child ke-2 */
+    .hero .floating-element:nth-child(2) {
+      top: 12%;
+      left: 3%;
       animation-delay: 0s;
       background: var(--gradient-1);
     }
 
-    .floating-element:nth-child(2) {
-      top: 20%;
-      right: 10%;
+    .hero .floating-element:nth-child(3) {
+      top: 16%;
+      right: 4%;
       background: var(--gradient-2);
       animation-delay: 1s;
     }
 
-    .floating-element:nth-child(3) {
-      bottom: 15%;
-      left: 15%;
+    .hero .floating-element:nth-child(4) {
+      bottom: 14%;
+      left: 6%;
       background: var(--gradient-3);
       animation-delay: 2s;
     }
 
-    .floating-element:nth-child(4) {
-      bottom: 25%;
-      right: 5%;
+    .hero .floating-element:nth-child(5) {
+      bottom: 18%;
+      right: 6%;
       background: var(--accent);
       animation-delay: 3s;
     }
 
-    .floating-element:nth-child(5) {
-      top: 40%;
-      left: 10%;
+    .hero .floating-element:nth-child(6) {
+      top: 52%;
+      left: 2%;
       background: var(--purple);
       animation-delay: 4s;
     }
 
-    .floating-element:nth-child(6) {
-      top: 60%;
-      right: 15%;
+    .hero .floating-element:nth-child(7) {
+      top: 62%;
+      right: 3%;
       background: var(--orange);
       animation-delay: 5s;
     }
@@ -925,6 +981,12 @@
       h2 { font-size: 1.8rem; }
 
       .floating-element { width: 70px; height: 70px; }
+
+      /* ✅ Mobile: supaya kotak ga ganggu teks */
+      .hero .floating-element:nth-child(6),
+      .hero .floating-element:nth-child(7){
+        display: none;
+      }
 
       section { padding: 60px 0; }
     }
@@ -1100,7 +1162,8 @@
 
       <h1 id="heroTitle">Irsyad</h1>
 
-      <div class="tagline">IoT • Backend • Cloud • Realtime Systems</div>
+      <!-- ✅ TAGLINE DIUBAH -->
+      <div class="tagline">IoT Engineer • Backend Developer • Real-time Systems</div>
 
       <p id="heroSubtitle">
         Mahasiswa & praktisi di bidang IoT, kelistrikan, robotik, dan pengembangan aplikasi (Android & web) untuk sistem yang benar-benar kepakai.
@@ -1125,9 +1188,9 @@
           </p>
 
           <p>
-            Fokus saya adalah solusi yang benar-benar terpakai: dari absensi RFID + sidik jari di sekolah (EduSmart),
+            Fokus saya adalah solusi yang benar-benar terpakai: dari absensi RFID di sekolah (EduSmart),
             monitoring & kontrol daya listrik (PZEM + relay), robot diferensial hindari rintangan,
-            hingga server Ubuntu dengan HAProxy + Keepalived + MySQL untuk high-availability.
+            hingga server Ubuntu dengan HAProxy + Keepalived + fungsionalitas high-availability.
           </p>
 
           <h3>Data Diri</h3>
@@ -1162,7 +1225,6 @@
             <span class="skill-item">ESP32</span>
             <span class="skill-item">ESP32-CAM</span>
             <span class="skill-item">RFID PN532</span>
-            <span class="skill-item">Fingerprint HLK</span>
             <span class="skill-item">PZEM-004T</span>
             <span class="skill-item">DHT22</span>
             <span class="skill-item">BME280</span>
@@ -1238,16 +1300,30 @@
           <div class="project-content">
             <h3 class="project-title">EduSmart - Sistem Absensi Realtime</h3>
             <p>
-              Absensi RFID PN532 + Fingerprint HLK dengan <strong>4 role</strong> (Super Admin / Admin / Guru / Siswa).
+              Absensi RFID PN532 dengan <strong>4 role</strong> (Super Admin / Admin / Guru / Siswa).
               Mendukung <strong>multi sekolah</strong> berbasis <strong>subdomain</strong>, update realtime ke dashboard, dan manajemen data terpusat.
+              Ditambah modul akademik untuk rekap nilai, tugas, eskul, serta rekap wali kelas.
             </p>
+
+            <!-- ✅ fungsi lengkap (UPDATED) -->
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Scan kartu RFID (PN532) lalu validasi user cepat (anti double-scan).</li>
+                <li>Otomatisasi absensi: hadir, telat, izin, pulang lengkap jam, kelas, dan catatan.</li>
+                <li>Manajemen user + role-based access (Super Admin, Admin, Guru, Siswa).</li>
+                <li>Modul akademik: input & rekap nilai, tugas, eskul, plus rekap wali kelas per siswa/kelas.</li>
+                <li>Multi-tenant: tiap sekolah terpisah via subdomain, data tetap terkelola.</li>
+                <li>Dashboard realtime + rekap harian/bulanan (absensi & akademik) + ekspor (CSV/Excel) bila dibutuhkan.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">React</span>
               <span class="tech-tag">Vite</span>
               <span class="tech-tag">Laravel 12</span>
               <span class="tech-tag">PostgreSQL</span>
               <span class="tech-tag">PN532</span>
-              <span class="tech-tag">HLK-ZW101</span>
             </div>
             <div class="project-links">
               <a href="https://github.com/Franklnir/EduSmart-sistem-absensi.git" class="btn">GitHub</a>
@@ -1269,8 +1345,22 @@
             <h3 class="project-title">Dashboard Monitoring & Pengolahan IoT</h3>
             <p>
               Monitoring sensor lingkungan & listrik (suhu, kelembapan, daya) dengan alur: <strong>ESP32 → API → Database → WebSocket → Chart.js</strong>.
-              Fokus ke data realtime yang mudah dibaca, kontrol operasional, dan ekspor data.
+              Fokus ke data realtime yang mudah dibaca, kontrol operasional, ekspor data, dan prediksi cuaca berbasis logika fuzzy.
             </p>
+
+            <!-- ✅ fungsi lengkap (UPDATED) -->
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Terima data sensor via REST API dan simpan ke database (timestamp, device_id).</li>
+                <li>Update grafik realtime via WebSocket (tanpa refresh halaman).</li>
+                <li>Histori data dengan filter waktu (hari/minggu/bulan) + ekspor CSV.</li>
+                <li>Prediksi cuaca (hujan/tidak) menggunakan logika fuzzy dari data sensor lingkungan.</li>
+                <li>Threshold / ambang batas untuk deteksi anomali dan peringatan operasional.</li>
+                <li>Siap integrasi kontrol (relay, mode perangkat, parameter) dari dashboard.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">Flask</span>
               <span class="tech-tag">FastAPI</span>
@@ -1278,6 +1368,7 @@
               <span class="tech-tag">WebSocket</span>
               <span class="tech-tag">Chart.js</span>
               <span class="tech-tag">ESP32</span>
+              <span class="tech-tag">Fuzzy Logic</span>
             </div>
             <div class="project-links">
               <a href="#detail-dashboard-iot" class="btn">Lihat Detail</a>
@@ -1300,6 +1391,19 @@
               Infrastruktur <strong>2 node Ubuntu</strong> dengan <strong>Keepalived (VRRP)</strong> untuk failover otomatis dan
               <strong>HAProxy</strong> sebagai reverse proxy/load balancer. Cocok untuk web/API yang butuh uptime tinggi.
             </p>
+
+            <!-- ✅ fungsi lengkap -->
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Failover otomatis: Virtual IP pindah ke node backup saat node utama down.</li>
+                <li>Load balancing request ke backend (round-robin/leastconn sesuai kebutuhan).</li>
+                <li>Health-check backend (tcp/http) supaya request tidak nyasar ke server sakit.</li>
+                <li>TLS termination + hardening header (opsional) untuk production.</li>
+                <li>Minim downtime saat maintenance: tinggal drain traffic, update, balik lagi.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">Ubuntu</span>
               <span class="tech-tag">HAProxy</span>
@@ -1327,7 +1431,22 @@
             <h3 class="project-title">Kontrol Daya IoT (PZEM + Relay)</h3>
             <p>
               Baca tegangan/arus/daya/kWh via PZEM-004T (ESP8266/ESP32). Kontrol relay multi-channel (manual & timer) dengan monitoring realtime di dashboard.
+              Dilengkapi perhitungan pemakaian untuk membantu penghematan dan monitoring tagihan listrik.
             </p>
+
+            <!-- ✅ fungsi lengkap (UPDATED) -->
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Monitoring listrik realtime: V, A, W, kWh dari PZEM-004T.</li>
+                <li>Kontrol relay multi-channel: ON/OFF manual dari dashboard.</li>
+                <li>Mode timer/jadwal: relay nyala-mati otomatis sesuai jam.</li>
+                <li>Proteksi sederhana: peringatan saat melewati ambang (opsional).</li>
+                <li>Monitoring tagihan: akumulasi kWh harian/bulanan + estimasi biaya (tarif bisa diatur).</li>
+                <li>Analisis penghematan: grafik pemakaian + log aktivitas untuk audit dan troubleshooting.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">ESP8266</span>
               <span class="tech-tag">ESP32</span>
@@ -1355,9 +1474,24 @@
             <h3 class="project-title">Integrasi AI / Xiaozhi (Backend)</h3>
             <p>
               Integrasi AI ke sistem: manajemen mode, token, endpoint, dan kontrol berbasis backend agar mudah di-scale dan di-maintain.
-              Ditambah <strong>asisten yang bisa diperintah dengan suara</strong> (voice command) untuk memicu aksi:
-              jalankan mode, explain perintah, query data, dan kontrol perangkat sesuai kebutuhan.
+              Ditambah <strong>asisten suara</strong> (voice command) untuk memicu aksi: jalankan mode, ringkas materi, query data, dan kontrol perangkat sesuai kebutuhan.
+              Memiliki mode pembelajaran dan pendamping curhat untuk kebutuhan pengguna.
             </p>
+
+            <!-- ✅ fungsi lengkap (UPDATED) -->
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Asisten pembelajaran: mode matematika dasar, sejarah, sains, ringkasan materi, dan latihan soal sederhana.</li>
+                <li>Terjemahan multi bahasa + mode face-to-face untuk percakapan langsung.</li>
+                <li>Pendamping curhat & wellbeing: bantu merapikan pikiran, journaling, dan saran coping ringan.</li>
+                <li>Manajemen token + endpoint AI (validasi, rotasi, akses berbasis role).</li>
+                <li>Mode switching (misal monitoring, otomasi, admin, debug) dari backend.</li>
+                <li>Bridge realtime (WebSocket) untuk event, status, dan respon cepat.</li>
+                <li>Voice command memicu aksi aman: query data, kontrol relay, jalankan workflow.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">FastAPI</span>
               <span class="tech-tag">Python</span>
@@ -1375,7 +1509,6 @@
         <!-- 6) CCTV Tracking (ESP32-CAM + MediaPipe) -->
         <div class="project-card scroll-animate-scale">
           <div class="project-image">
-            <!-- kalau belum punya file, nanti otomatis jadi placeholder gradient -->
             <img
               src="assets/projects/cctv.jpg"
               alt="CCTV Tracking (ESP32-CAM + MediaPipe)"
@@ -1389,11 +1522,25 @@
               ESP32-CAM streaming (gaya CCTV) → Python (MediaPipe) untuk deteksi & tracking wajah/kepala/objek.
               Hasil tracking bisa ditampilkan di UI dan dipakai untuk otomasi (trigger event/alert), atau pan-tilt jika memakai bracket.
             </p>
+
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Streaming video dari ESP32-CAM untuk monitoring jarak jauh.</li>
+                <li>Deteksi + tracking objek (wajah/kepala/gerakan) via MediaPipe.</li>
+                <li>Deteksi objek asing lalu kirim data/snapshot ke dashboard dan notifikasi Telegram (opsional).</li>
+                <li>Overlay hasil tracking ke UI (bounding/landmark) untuk visual jelas.</li>
+                <li>Trigger event: alert, log kejadian, atau publish event MQTT (opsional).</li>
+                <li>Siap integrasi pan-tilt untuk follow target (jika pakai servo/bracket).</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">ESP32-CAM</span>
               <span class="tech-tag">Python</span>
               <span class="tech-tag">MediaPipe</span>
               <span class="tech-tag">Flask</span>
+              <span class="tech-tag">Telegram Bot (Opsional)</span>
               <span class="tech-tag">MQTT (Opsional)</span>
             </div>
             <div class="project-links">
@@ -1418,6 +1565,18 @@
               Robot 2 roda dengan HC-SR04 untuk deteksi jarak. Logika threshold jarak (maju/belok),
               smoothing pembacaan, dan manajemen daya sederhana agar stabil.
             </p>
+
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Autonomous navigation sederhana: maju, belok, mundur berdasarkan jarak.</li>
+                <li>Filtering/smoothing sensor HC-SR04 untuk kurangi noise pembacaan.</li>
+                <li>Kontrol motor diferensial (kiri/kanan) untuk manuver lebih halus.</li>
+                <li>Parameter threshold mudah dituning untuk kondisi lapangan.</li>
+                <li>Manajemen daya basic agar robot lebih stabil dan tidak drop mendadak.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">ESP32</span>
               <span class="tech-tag">Arduino</span>
@@ -1434,7 +1593,6 @@
         <!-- 8) Recipe App (Mobile & Web) -->
         <div class="project-card scroll-animate-scale">
           <div class="project-image">
-            <!-- kalau belum punya file, nanti otomatis jadi placeholder gradient -->
             <img
               src="assets/projects/recipe-app.jpg"
               alt="Aplikasi Resep Makanan (Android + Web)"
@@ -1449,6 +1607,18 @@
               Mobile: Firebase Auth + database, UI list & search (RecyclerView + Glide).
               Web: <strong>CodeIgniter 4 (PHP)</strong> untuk kebutuhan admin/data & integrasi API.
             </p>
+
+            <details class="project-more" open>
+              <summary>Fungsi Utama</summary>
+              <ul>
+                <li>Autentikasi user (register/login) dan session aman.</li>
+                <li>CRUD resep: tambah, edit, hapus, lengkap dengan kategori.</li>
+                <li>Upload gambar resep (storage) + tampil cepat di UI (Glide).</li>
+                <li>Pencarian resep (nama/kategori) untuk UX yang enak dipakai.</li>
+                <li>Panel web admin untuk manajemen data dan integrasi API bila perlu.</li>
+              </ul>
+            </details>
+
             <div class="project-tech">
               <span class="tech-tag">Android (Java)</span>
               <span class="tech-tag">Firebase</span>
@@ -1475,18 +1645,20 @@
       <div class="tech-details scroll-animate">
 
         <div class="detail-item" id="detail-edusmart">
-          <h3>EduSmart (Absensi RFID + Fingerprint, Multi Sekolah)</h3>
-          <p><strong>Perangkat:</strong> PN532 (I2C/SPI), HLK-ZW101 (UART) ke ESP32/ESP8266.</p>
+          <h3>EduSmart (Absensi RFID, Multi Sekolah + Akademik)</h3>
+          <p><strong>Perangkat:</strong> PN532 (I2C/SPI) ke ESP32/ESP8266.</p>
           <p><strong>Role:</strong> <strong>Super Admin / Admin / Guru / Siswa</strong> dengan kontrol akses sesuai kebutuhan.</p>
           <p><strong>Multi sekolah:</strong> Arsitektur <strong>multi-tenant</strong> berbasis <strong>subdomain</strong> (tiap sekolah terpisah namun tetap terkelola).</p>
           <p><strong>Stack:</strong> Frontend <strong>React + Vite</strong>, Backend <strong>Laravel 12</strong>, Database <strong>PostgreSQL</strong>.</p>
-          <p><strong>Alur:</strong> Tap kartu / scan sidik jari → verifikasi → tulis ke database (kelas/tanggal/jam) → UI update realtime ke dashboard.</p>
+          <p><strong>Alur:</strong> Tap kartu RFID → verifikasi → tulis ke database (kelas/tanggal/jam) → UI update realtime ke dashboard.</p>
+          <p><strong>Akademik:</strong> modul rekap nilai, tugas, eskul, dan rekap wali kelas per siswa/kelas untuk laporan sekolah.</p>
         </div>
 
         <div class="detail-item" id="detail-dashboard-iot">
           <h3>Dashboard Monitoring & Pengolahan IoT</h3>
           <p><strong>Flow:</strong> Sensor → REST API (Flask/FastAPI) → Database (MySQL) → WebSocket → Chart.js realtime.</p>
-          <p><strong>Fitur:</strong> grafik realtime, histori, filter waktu, ekspor CSV/Excel, dan opsi integrasi kontrol (relay/parameter ambang).</p>
+          <p><strong>Fitur:</strong> grafik realtime, histori, filter waktu, ekspor CSV, threshold anomali, dan integrasi kontrol.</p>
+          <p><strong>Prediksi:</strong> prediksi cuaca (hujan/tidak) menggunakan logika fuzzy dari data sensor lingkungan.</p>
           <p><strong>Tujuan:</strong> data mudah dibaca untuk operasional, deteksi anomali lebih cepat, dan siap dipakai di lapangan.</p>
         </div>
 
@@ -1499,30 +1671,26 @@
         </div>
 
         <div class="detail-item" id="detail-pzem">
-          <h3>Kontrol Daya IoT (PZEM + Relay)</h3>
+          <h3>Kontrol Daya IoT (PZEM + Relay) + Monitoring Tagihan</h3>
           <p><strong>Pengukuran:</strong> tegangan/arus/daya/kWh via PZEM-004T, interval sampling disesuaikan kebutuhan.</p>
           <p><strong>Kontrol:</strong> manual toggle + timer ON/OFF; bisa ditambah notifikasi jika melewati ambang.</p>
-          <p><strong>Fokus:</strong> keamanan & efisiensi energi (mengurangi pemborosan & risiko kerusakan).</p>
+          <p><strong>Tagihan:</strong> akumulasi kWh harian/bulanan + estimasi biaya (tarif dapat diatur) untuk bantu penghematan.</p>
+          <p><strong>Fokus:</strong> efisiensi energi, pemantauan pemakaian, dan kemudahan audit lewat log aktivitas.</p>
         </div>
 
         <div class="detail-item" id="detail-ai">
           <h3>Integrasi AI / Xiaozhi (Backend) + Asisten Suara</h3>
           <p><strong>Fokus:</strong> mode AI, token, endpoint, kontrol akses, dan arsitektur backend agar integrasi mudah di-scale.</p>
-          <p><strong>Asisten suara:</strong> voice command untuk memicu aksi sistem, misalnya:</p>
-          <ul>
-            <li>Jalankan mode tertentu (monitoring/otomasi).</li>
-            <li>Eksekusi perintah aman berbasis role (misal admin saja).</li>
-            <li>Query ringkasan data realtime (misal “berapa suhu sekarang?”).</li>
-            <li>Kontrol perangkat (misal relay/parameter ambang) lewat backend.</li>
-          </ul>
-          <p><strong>Tujuan:</strong> AI jadi komponen sistem yang benar-benar kepakai, bukan sekadar fitur tempelan.</p>
+          <p><strong>Asisten pembelajaran:</strong> matematika dasar, sejarah, sains, terjemahan multi bahasa, dan face-to-face conversation.</p>
+          <p><strong>Pendamping curhat:</strong> fitur wellbeing untuk membantu pengguna menuliskan masalah, merangkum poin penting, dan menjaga alur percakapan tetap aman.</p>
+          <p><strong>Teknis:</strong> manajemen token, mode switching, dan bridge realtime untuk event/status.</p>
         </div>
 
         <div class="detail-item" id="detail-cctv">
-          <h3>CCTV Tracking (ESP32-CAM + MediaPipe)</h3>
+          <h3>CCTV Tracking (ESP32-CAM + MediaPipe) + Alert</h3>
           <p><strong>Flow:</strong> ESP32-CAM streaming (CCTV-style) → Python (MediaPipe) → tracking wajah/kepala/objek.</p>
-          <p><strong>Output:</strong> hasil tracking tampil di UI, bisa dijadikan event/alert, atau pan-tilt jika bracket tersedia.</p>
-          <p><strong>Kontrol:</strong> smoothing agar tidak “getar”, tuning threshold & update rate agar responsif.</p>
+          <p><strong>Output:</strong> hasil tracking tampil di UI dan bisa dijadikan event/alert.</p>
+          <p><strong>Alert:</strong> saat mendeteksi objek asing, sistem bisa kirim data/snapshot ke dashboard dan notifikasi Telegram (opsional).</p>
           <p><strong>Integrasi:</strong> MQTT opsional untuk publish event ke perangkat lain.</p>
         </div>
 
@@ -1553,7 +1721,6 @@
       <div class="contact-content">
 
         <div class="contact-info">
-          <!-- ✅ bisa diklik langsung (arahkan) -->
           <a class="contact-item scroll-animate-left" href="mailto:franklnlynirsyad@gmail.com?subject=Kolaborasi%20%7C%20Irsyad&body=Halo%20Irsyad%2C%0A%0ASaya%20ingin%20diskusi%20tentang%20...%0A%0ATerima%20kasih." target="_blank" rel="noopener">
             <div class="contact-icon">✉️</div>
             <div>
@@ -1587,7 +1754,6 @@
           </a>
         </div>
 
-        <!-- ✅ ganti “Kirim Pesan” jadi panel tujuan + CTA -->
         <div class="goal-panel scroll-animate-right">
           <h3>Tujuan & Kolaborasi</h3>
           <p>
